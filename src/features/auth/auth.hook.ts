@@ -1,17 +1,17 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { LoginInput } from "./auth.types";
-import { getEmailFromUsername, login } from "./auth.api";
 import { useRouter } from "next/navigation";
+import { LoginFormData } from "./auth.types";
+import { fetchEmailByUsername, signInWithEmail } from "./auth.api";
 
-export function useAuth() {
+export function useLogin() {
   const router = useRouter();
 
-  const loginMutation = useMutation({
-    mutationFn: async (payload: LoginInput) => {
-      const email = await getEmailFromUsername(payload.username);
-      await login(email, payload.password);
+  const mutation = useMutation({
+    mutationFn: async (payload: LoginFormData) => {
+      const email = await fetchEmailByUsername(payload.username);
+      await signInWithEmail(email, payload.password);
     },
     onSuccess: () => {
       router.push("/dashboard");
@@ -19,8 +19,8 @@ export function useAuth() {
   });
 
   return {
-    login: loginMutation.mutate,
-    isLoggingIn: loginMutation.isPending,
-    loginError: loginMutation.error,
+    submitLogin: mutation.mutate,
+    isLoading: mutation.isPending,
+    error: mutation.error,
   };
 }

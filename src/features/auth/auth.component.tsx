@@ -10,9 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/container";
-
-import { loginSchema, LoginInput } from "./auth.types";
-import { useAuth } from "./auth.hook";
 import {
   Card,
   CardContent,
@@ -22,19 +19,22 @@ import {
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 
-export function Auth() {
-  const { login, isLoggingIn, loginError } = useAuth();
+import { loginFormSchema, LoginFormData } from "./auth.types";
+import { useLogin } from "./auth.hook";
+
+export function LoginForm() {
+  const { submitLogin, isLoading, error } = useLogin();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginFormSchema),
   });
 
-  const onSubmit = (data: LoginInput) => {
-    login(data);
+  const onSubmit = (data: LoginFormData) => {
+    submitLogin(data);
   };
 
   return (
@@ -68,16 +68,16 @@ export function Auth() {
           </Field>
 
           <Field>
-            <Button type="submit" disabled={isLoggingIn}>
-              {isLoggingIn ? <Spinner /> : "Submit"}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? <Spinner /> : "Submit"}
             </Button>
           </Field>
 
-          {loginError && (
+          {error && (
             <Card className="text-destructive">
               <CardHeader>
                 <CardTitle>Login Error</CardTitle>
-                <CardDescription>{loginError.message}</CardDescription>
+                <CardDescription>{error.message}</CardDescription>
               </CardHeader>
             </Card>
           )}

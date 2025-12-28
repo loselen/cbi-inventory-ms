@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
+export const loginFormSchema = z.object({
   username: z
     .string()
     .min(1, "Username is required")
@@ -13,4 +13,4 @@ export const loginSchema = z.object({
     .regex(/^[a-zA-Z0-9]+$/, "Password must be alphanumeric"),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
+export type LoginFormData = z.infer<typeof loginFormSchema>;

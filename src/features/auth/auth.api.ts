@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
-export async function getEmailFromUsername(username: string) {
+export async function fetchEmailByUsername(username: string) {
   const { data, error } = await supabase
     .from("users")
     .select("email")
@@ -12,7 +12,7 @@ export async function getEmailFromUsername(username: string) {
   return data.email;
 }
 
-export async function login(email: string, password: string) {
+export async function signInWithEmail(email: string, password: string) {
   const { error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
