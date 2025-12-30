@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,8 +23,10 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { loginFormSchema, LoginFormData } from "./auth.types";
 import { useLogin } from "./auth.hook";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/query-client";
 
-export function LoginForm() {
+function LoginFormManager() {
   const { submitLogin, isLoading, error } = useLogin();
 
   const {
@@ -84,5 +88,13 @@ export function LoginForm() {
         </FieldSet>
       </form>
     </Container>
+  );
+}
+
+export function LoginForm() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LoginFormManager />
+    </QueryClientProvider>
   );
 }
