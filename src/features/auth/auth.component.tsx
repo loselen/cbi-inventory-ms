@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/container";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -23,11 +22,9 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { loginFormSchema, LoginFormData } from "./auth.types";
 import { useLogin } from "./auth.hook";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/query-client";
 
-function LoginFormManager() {
-  const { submitLogin, isLoading, error } = useLogin();
+export function LoginForm() {
+  const { login, isLoggingIn, loginError } = useLogin();
 
   const {
     register,
@@ -38,7 +35,7 @@ function LoginFormManager() {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    submitLogin(data);
+    login(data);
   };
 
   return (
@@ -72,29 +69,21 @@ function LoginFormManager() {
           </Field>
 
           <Field>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Spinner /> : "Submit"}
+            <Button type="submit" disabled={isLoggingIn}>
+              {isLoggingIn ? <Spinner /> : "Submit"}
             </Button>
           </Field>
 
-          {error && (
+          {loginError && (
             <Card className="text-destructive">
               <CardHeader>
                 <CardTitle>Login Error</CardTitle>
-                <CardDescription>{error.message}</CardDescription>
+                <CardDescription>{loginError.message}</CardDescription>
               </CardHeader>
             </Card>
           )}
         </FieldSet>
       </form>
     </Container>
-  );
-}
-
-export function LoginForm() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <LoginFormManager />
-    </QueryClientProvider>
   );
 }
