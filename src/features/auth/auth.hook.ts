@@ -3,21 +3,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { LoginFormData } from "./auth.types";
+import { loginByUsernameAndPassword } from "./auth.api";
 
 export function useLogin() {
   const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: async (payload: LoginFormData) => {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error(await res.text());
+      await loginByUsernameAndPassword(payload);
     },
     onSuccess: () => {
       router.refresh();
